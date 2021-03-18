@@ -27,13 +27,17 @@ public interface ItemOnSaleRepository extends CrudRepository<Item, Integer> {
             nativeQuery = true)
     List<Item> findAllItemsFromWishlist(@Param("uid") int uid);
 
-    @Query(value = "SELECT * from GOODS items where items.rating = (SELECT max(rating) from GOODS"
-            + " items "
-            + "WHERE"
-            + " items.is_on_sale = true) "
-            + "LIMIT 1",
+
+    // in the rating table group by item_id, and then get avg rating for each item
+    // find the max rating item
+    // find the item_id for max rating item
+    // find the result
+    @Query(value = "select items.ID, items.ITEM_NAME, items.IS_ON_SALE, items.CATEGORY from GOODS"
+            + " items where items.id = (select item_id from RATINGS where RATING = select max"
+            + "(avg_rating) from (select ITEM_ID, avg(RATING) as avg_rating from RATINGS where UID"
+            + " <> :uid group by ITEM_ID))",
            nativeQuery = true)
-    List<Item> findItemsByTopRating();
+    List<Item> findItemsByTopRatingFromOtherUser(@Param("uid") int uid);
 
 
 }

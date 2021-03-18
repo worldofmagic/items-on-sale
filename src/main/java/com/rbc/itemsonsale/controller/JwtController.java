@@ -2,6 +2,7 @@ package com.rbc.itemsonsale.controller;
 
 import com.rbc.itemsonsale.model.JwtRequest;
 import com.rbc.itemsonsale.model.JwtResponse;
+import com.rbc.itemsonsale.service.JwtUserDetailsService;
 import com.rbc.itemsonsale.util.JwtTokenUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Objects;
 
 @RestController
-@CrossOrigin
 public class JwtController {
 
 
@@ -25,12 +25,13 @@ public class JwtController {
 
     public JwtController(AuthenticationManager authenticationManager,
             JwtTokenUtil jwtTokenUtil,
-            UserDetailsService jwtInMemoryUserDetailsService) {
+            JwtUserDetailsService jwtInMemoryUserDetailsService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtil = jwtTokenUtil;
         this.jwtInMemoryUserDetailsService = jwtInMemoryUserDetailsService;
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
             throws Exception {

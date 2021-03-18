@@ -22,7 +22,7 @@ public class ItemOnSaleServiceImpl implements ItemOnSaleService {
         System.out.println("part1 :" + itemsFromOrders.toString());
         List<Item> itemsFromWishList = itemOnSaleRepository.findAllItemsFromWishlist(userId);
         System.out.println("part2 :" + itemsFromWishList.toString());
-        List<Item> itemsTopRating = itemOnSaleRepository.findItemsByTopRating();
+        List<Item> itemsTopRating = itemOnSaleRepository.findItemsByTopRatingFromOtherUser(userId);
         System.out.println("part3 :" + itemsTopRating.toString());
 
         List<Item> res = itemsFromOrders.stream().sorted(Comparator.comparingInt(Item::getRating)).collect(
