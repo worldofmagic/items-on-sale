@@ -8,11 +8,11 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@Table(name = "users")
+@Table(name = "TESTUSERS")
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userId;
+    private int id;
     private String username;
     private String password;
     private String email;

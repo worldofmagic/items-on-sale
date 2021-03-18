@@ -28,7 +28,7 @@ public class ItemOnSaleController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/item/{id}")
     public ResponseEntity<User> getItem(@PathVariable int id){
-        User user = itemRepository.findUserByUserId(id);
+        User user = itemRepository.findUserById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
