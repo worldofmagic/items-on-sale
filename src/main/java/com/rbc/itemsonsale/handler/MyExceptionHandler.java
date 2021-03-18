@@ -4,10 +4,11 @@ import com.rbc.itemsonsale.exception.MyBasicException;
 import com.rbc.itemsonsale.model.Response;
 import com.rbc.itemsonsale.util.ResponseUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @ControllerAdvice
-public class ExceptionHandler {
+public class MyExceptionHandler {
 
     @ExceptionHandler(MyBasicException.class)
     @ResponseBody

@@ -19,8 +19,11 @@ public class ItemOnSaleServiceImpl implements ItemOnSaleService {
     @Override
     public List<Item> getItemOnSaleWithUserId(int userId) {
         List<Item> itemsFromOrders = itemOnSaleRepository.findAllItemsFromOrderByCategory(userId);
+        System.out.println("part1 :" + itemsFromOrders.toString());
         List<Item> itemsFromWishList = itemOnSaleRepository.findAllItemsFromWishlist(userId);
+        System.out.println("part2 :" + itemsFromWishList.toString());
         List<Item> itemsTopRating = itemOnSaleRepository.findItemsByTopRating();
+        System.out.println("part3 :" + itemsTopRating.toString());
 
         List<Item> res = itemsFromOrders.stream().sorted(Comparator.comparingInt(Item::getRating)).collect(
                 Collectors.toList());
