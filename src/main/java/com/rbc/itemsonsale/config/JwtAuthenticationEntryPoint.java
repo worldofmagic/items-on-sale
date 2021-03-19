@@ -15,6 +15,14 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
 
     private static final long serialVersionUID = -7858869558953243875L;
 
+    /**
+     * AuthenticationEntryPoint.Commence(..) will be called when a user trying to hit the
+     * secured endpoint wihtout login
+     * @param request request from user
+     * @param response response send to user
+     * @param authException authentication exception
+     * @throws IOException
+     */
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws IOException {

@@ -4,6 +4,7 @@ import com.rbc.itemsonsale.model.JwtRequest;
 import com.rbc.itemsonsale.model.JwtResponse;
 import com.rbc.itemsonsale.service.JwtUserDetailsService;
 import com.rbc.itemsonsale.util.JwtTokenUtil;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -31,7 +32,6 @@ public class JwtController {
         this.jwtInMemoryUserDetailsService = jwtInMemoryUserDetailsService;
     }
 
-    @CrossOrigin
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
             throws Exception {
@@ -51,7 +51,9 @@ public class JwtController {
         Objects.requireNonNull(password);
 
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            UsernamePasswordAuthenticationToken token =
+                    new UsernamePasswordAuthenticationToken(username, password);
+            authenticationManager.authenticate(token);
         } catch (DisabledException e) {
             throw new Exception("USER_DISABLED", e);
         } catch (BadCredentialsException e) {

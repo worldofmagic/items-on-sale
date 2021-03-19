@@ -1,6 +1,7 @@
 package com.rbc.itemsonsale.config;
 
 import com.rbc.itemsonsale.filter.JwtRequestFilter;
+import com.rbc.itemsonsale.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,8 +12,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -20,65 +19,79 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-//
-//    @Bean
-//    @Override
-//    protected UserDetailsService userDetailsService() {
-//        UserDetails user1 = User
-//                .withUsername("user")
-//                .password("$2a$10$Gxb1pXklHDDByHNnpvPkRenBfwofwnrAO5hZDg7fMSLKhs0Mpsnde")
-//                .roles("USER")
-//                .build();
-//        UserDetails user2 = User
-//                .withUsername("admin")
-//                .password("$2a$10$Gxb1pXklHDDByHNnpvPkRenBfwofwnrAO5hZDg7fMSLKhs0Mpsnde")
-//                .roles("ADMIN")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(user1, user2);
-//    }
-//
-//    @Override
-//    protected void configure(HttpSecurity security) throws Exception
-//    {
-//        security.httpBasic().disable();
-//    }
+    //    below is the built-in in-memory authorization from spring security
+    //    @Bean
+    //    public PasswordEncoder passwordEncoder() {
+    //        return new BCryptPasswordEncoder();
+    //    }
+    //
+    //    @Bean
+    //    @Override
+    //    protected UserDetailsService userDetailsService() {
+    //        UserDetails user1 = User
+    //                .withUsername("user")
+    //                .password("$2a$10$Gxb1pXklHDDByHNnpvPkRenBfwofwnrAO5hZDg7fMSLKhs0Mpsnde")
+    //                .roles("USER")
+    //                .build();
+    //        UserDetails user2 = User
+    //                .withUsername("admin")
+    //                .password("$2a$10$Gxb1pXklHDDByHNnpvPkRenBfwofwnrAO5hZDg7fMSLKhs0Mpsnde")
+    //                .roles("ADMIN")
+    //                .build();
+    //
+    //        return new InMemoryUserDetailsManager(user1, user2);
+    //    }
+    //
+    //    @Override
+    //    protected void configure(HttpSecurity security) throws Exception
+    //    {
+    //        security.httpBasic().disable();
+    //    }
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final UserDetailsService jwtUserDetailsService;
+    private final JwtUserDetailsService jwtUserDetailsService;
     private final JwtRequestFilter jwtRequestFilter;
 
     public SecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-            UserDetailsService jwtUserDetailsService,
+            JwtUserDetailsService jwtUserDetailsService,
             JwtRequestFilter jwtRequestFilter) {
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.jwtUserDetailsService = jwtUserDetailsService;
         this.jwtRequestFilter = jwtRequestFilter;
     }
 
+    /**
+     * config for JWT user service and password encoder
+     * @param auth
+     * @throws Exception
+     */
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         // configure AuthenticationManager so that it knows from where to load
         // user for matching credentials
         // Use BCryptPasswordEncoder
-        auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder);
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
+    /**
+     * init AuthenticationManager
+     * @return AuthenticationManager
+     * @throws Exception
+     */
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
+    /**
+     * configure for security
+     * @param httpSecurity configure for security
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
