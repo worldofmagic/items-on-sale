@@ -12,15 +12,17 @@ import java.util.List;
 public interface ItemOnSaleRepository extends CrudRepository<Item, Integer> {
 
     // find all the items has the same category with the items in user's history order
-    @Query(value = "select items.ID, items.ITEM_NAME, items.IS_ON_SALE, items.CATEGORY,"
-            + "items.RATING from GOODS items, TESTUSERS users, ORDERS orders where :uid = users.ID and "
-            + "items.CATEGORY = orders.ITEM_CATEGORY",
+    @Query(value = "select ID, ITEM_NAME, IS_ON_SALE, CATEGORY from (select items.ID, items.ITEM_NAME,"
+            + " items.IS_ON_SALE, items.CATEGORY, ratings.RATING from GOODS items, TESTUSERS "
+            + "users, Orders orders, RATINGS ratings where :uid = users.ID and items.CATEGORY = "
+            + "orders.ITEM_CATEGORY and ratings.uid = :uid and items.id = ratings.item_id order "
+            + "by ratings.RATING DESC)",
            nativeQuery = true)
     List<Item> findAllItemsFromOrderByCategory(@Param("uid") int uid);
 
     // find all items has the same category with the items in user's wishlist
     @Query(value = "select items.ID, items.ITEM_NAME, items.IS_ON_SALE, items.CATEGORY,"
-            + "items.RATING from GOODS items, TESTUSERS users, WISHILIST wishlist where :uid = "
+            + "from GOODS items, TESTUSERS users, WISHILIST wishlist where :uid = "
             + "users"
             + ".ID and "
             + "items.CATEGORY = wishlist.ITEM_CATEGORY",

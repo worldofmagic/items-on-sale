@@ -44,7 +44,6 @@ class ItemOnSaleControllerTest {
         item.setCategory("food");
         item.setItemName("apple");
         item.setId(1);
-        item.setRating(5);
         List<Item> res = new ArrayList<>();
         res.add(item);
 

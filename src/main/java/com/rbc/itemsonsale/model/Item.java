@@ -16,5 +16,4 @@ public class Item {
     @Column(name = "is_on_sale")
     private boolean isOnSale;
     private String category;
-    private int rating;
 }
